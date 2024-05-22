@@ -24,3 +24,16 @@ export const POST = async (req: NextRequest) => {
 		return NextResponse.json("Something went wrong creating the user", { status: 500 });
 	}
 }
+
+export const GET = async (req: NextRequest) => {
+	try {
+		const users = await prisma.user.findMany();
+
+		return NextResponse.json({ users });
+	} catch (error) {
+		console.error(error);
+
+		return NextResponse.json("Something went wrong finding users", { status: 500 });
+	}
+}
+

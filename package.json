@@ -10,7 +10,8 @@
     "startdb": "docker compose --env-file .env.local up -d",
     "prismaStudio": "dotenv -e .env.local -- npx prisma studio",
     "devMigrate": "dotenv -e .env.local -- npx prisma migrate dev",
-    "startup": "npm run startdb && npm run dev"
+    "startup": "npm run startdb && npm run dev",
+    "psql": "docker exec -it nextjs-financeapp-db-1 psql -d DBNAME -U DBUSER"
   },
   "dependencies": {
     "@prisma/client": "^5.14.0",
