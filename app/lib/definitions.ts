@@ -13,9 +13,4 @@ export type boredapi = {
   accessibility: number;
 };
 
-export type ApiResponse<T> = {
-  data: T | null;
-  error: Error | null;
-  isLoading: boolean;
-};
 
