@@ -1,0 +1,34 @@
+services:
+  db:
+    image: postgres:15-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - ~/apps/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=S3cret
+      - POSTGRES_USER=citizix_user
+      - POSTGRES_DB=citizix_db
+
+
+
+
+
+# services:
+#   app:
+#     build:
+#       context: .
+#     image: nextjs-dev
+#     ports:
+#       - "3000:3000"
+#     environment:
+#       - NODE_ENV=development
+#     develop:
+#       watch:
+#         - action: sync
+#           path: ./app
+#           target: /app/app
+#           ignore: 
+#             - node_modules/
+#         - action: rebuild
+#           path: package.json
