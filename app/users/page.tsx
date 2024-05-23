@@ -16,7 +16,7 @@ export default async function Page() {
                 ))}
             </ul>
 
-            <Form></Form>/
+            <Form></Form>
         </div>
     );
 }
