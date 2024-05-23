@@ -1,5 +1,6 @@
 import { getUsers } from "@/app/lib/data";
 import { User } from "@prisma/client";
+import Form  from "@/app/ui/createUser";
 
 export default async function Page() {
     const users:User[] = await getUsers();
@@ -14,6 +15,8 @@ export default async function Page() {
                     </li>
                 ))}
             </ul>
+
+            <Form></Form>/
         </div>
     );
 }

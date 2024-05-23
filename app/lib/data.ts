@@ -31,6 +31,8 @@ export async function fetchFact(): Promise<boredapi> {
 
 export async function getUsers(): Promise<User[]> {
   const result: User[] = await prisma.$queryRaw`SELECT * FROM "User"`;
-  console.log(result);
+  //const result: User[] = await prisma.user.findMany();
   return result;
 }
+
+
