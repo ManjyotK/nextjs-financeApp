@@ -6,21 +6,28 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "startdb": "docker compose --env-file .env.local up -d",
+    "prismaStudio": "dotenv -e .env.local -- npx prisma studio",
+    "devMigrate": "dotenv -e .env.local -- npx prisma migrate dev",
+    "startup": "npm run startdb && npm run dev",
+    "psql": "docker exec -it nextjs-financeapp-db-1 psql -d DBNAME -U DBUSER"
   },
   "dependencies": {
+    "@prisma/client": "^5.14.0",
+    "next": "14.2.3",
+    "prisma": "^5.14.0",
     "react": "^18",
-    "react-dom": "^18",
-    "next": "14.2.3"
+    "react-dom": "^18"
   },
   "devDependencies": {
-    "typescript": "^5",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.3",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
-    "eslint": "^8",
-    "eslint-config-next": "14.2.3"
+    "typescript": "^5"
   }
 }
