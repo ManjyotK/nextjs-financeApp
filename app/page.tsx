@@ -1,15 +1,14 @@
-import { fetchFact } from './lib/data';
+import { Button } from "@nextui-org/button"
 
-import { boredapi } from "./lib/definitions";
 
 export default async function Page() {
-  const fact: boredapi = await fetchFact();
-
   return (
-    <div className="flex items-center justify-center px-4 py-8 bg-gray-100 rounded-xl shadow-lg">
-      <p className="text-2xl font-semibold text-emerald-500">{fact.activity}</p>
-    </div>
-  );
-
-};
-
+    <>
+      <div className="flex flex-col items-center justify-center p-4">
+        <h2 className="text-2xl font-bold">This is a finance app</h2>
+        <p className="text-lg">This is a full landing page for my finance app.</p>
+        <Button color="primary">Get Started</Button>
+      </div>
+      
+    </>
+)};
