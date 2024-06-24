@@ -14,6 +14,7 @@ export default function App() {
     "Profile",
     "Dashboard",
     "Users",
+    "Transactions",
     "Help & Feedback",
     "Log Out",
   ];
@@ -34,21 +35,13 @@ export default function App() {
       </NavbarContent>
 
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
-        <NavbarItem isActive={pathname === "/users"}>
-          <Link color={pathname === "/users" ? "primary" : "foreground"} href="/users">
-            Users
-          </Link>
-        </NavbarItem>
-        <NavbarItem isActive={pathname === "/customers"}>
-          <Link color={pathname === "/customers" ? "primary" : "foreground"} href="#">
-            Customers
-          </Link>
-        </NavbarItem>
-        <NavbarItem isActive={pathname === "/integrations"}>
-          <Link color={pathname === "/integrations" ? "primary" : "foreground"} href="#">
-            Integrations
-          </Link>
-        </NavbarItem>
+        {menuItems.map((item) => (
+          <NavbarItem isActive={pathname === item} key={item}>
+            <Link color={pathname === "/" + item.toLowerCase() ? "primary" : "foreground"} href={`/${item.toLowerCase()}`}>
+              {item}
+            </Link>
+          </NavbarItem>
+        ))}
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem className="hidden lg:flex">
@@ -68,7 +61,7 @@ export default function App() {
                 index === menuItems.length - 1 ? "danger" : "foreground"
               }
               className="w-full"
-              href="#"
+              href={`/${item.toLowerCase()}`}
               size="lg"
             >
               {item}

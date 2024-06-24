@@ -46,7 +46,7 @@ export default function Form() {
         </div>
       </div>
       <div className="mt-6 flex justify-end gap-4">
-        <button type="submit">Create Invoice</button>
+        <button type="submit">Create User</button>
       </div>
     </form>
   );

@@ -21,8 +21,10 @@ export default function RootLayout({
       <body>
         <Providers>
           <SiteNav />
-          {children}
+            <div className="p-6 md:overflow-y-auto md:px-12">{children}</div>
         </Providers>
+
+        
       </body>
     </html>
   );
