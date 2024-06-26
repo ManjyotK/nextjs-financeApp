@@ -19,4 +19,13 @@ export type User = {
   email: string;
 };
 
+export type TransactionFormat = {
+  id: number;
+  description: string;
+  amount: number;
+  date: string;
+  categoryId: number;
+  userId: number;
+};
+
 
