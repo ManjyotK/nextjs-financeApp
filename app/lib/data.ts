@@ -1,4 +1,4 @@
-import { boredapi } from "./definitions";
+import { boredapi, TransactionFormat } from "./definitions";
 import prisma from "@/lib/db/prisma";
 import { User, Transaction } from "@prisma/client";
 
@@ -40,5 +40,20 @@ export async function getTransactions(): Promise<Transaction[]> {
   // const result: Transaction[] = await prisma.$queryRaw`SELECT * FROM "Transaction"`;
   const result: Transaction[] = await prisma.transaction.findMany();
   return result;
+}
+
+export async function getTransactionsJSON(): Promise<TransactionFormat[]> {
+  // const result: Transaction[] = await prisma.$queryRaw`SELECT * FROM "Transaction"`;
+  const result: Transaction[] = await prisma.transaction.findMany();
+
+  const formattedTransactions:TransactionFormat[] = result.map((transaction) => {
+    return {
+      ...transaction,
+      amount: transaction.amount.toNumber(),
+      date: transaction.date.toISOString()
+    }
+  })
+
+  return formattedTransactions;
 }
 
