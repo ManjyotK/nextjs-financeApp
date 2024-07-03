@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Providers } from "./providers";
+import SiteNav from "@/app/ui/siteNav";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -16,7 +18,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body>
+        <Providers>
+          <SiteNav />
+            <div className="p-6 md:overflow-y-auto md:px-12">{children}</div>
+        </Providers>
+
+        
+      </body>
     </html>
   );
 }

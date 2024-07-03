@@ -14,8 +14,10 @@
     "psql": "docker exec -it nextjs-financeapp-db-1 psql -d DBNAME -U DBUSER"
   },
   "dependencies": {
+    "@nextui-org/react": "^2.4.2",
     "@prisma/client": "^5.14.0",
-    "next": "14.2.3",
+    "framer-motion": "^11.2.6",
+    "next": "^14.2.4",
     "prisma": "^5.14.0",
     "react": "^18",
     "react-dom": "^18"

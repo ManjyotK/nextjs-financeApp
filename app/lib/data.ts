@@ -1,6 +1,6 @@
 import { boredapi } from "./definitions";
 import prisma from "@/lib/db/prisma";
-import { User } from "@prisma/client";
+import { User, Transaction } from "@prisma/client";
 
 
 export async function fetchFact(): Promise<boredapi> {
@@ -30,9 +30,15 @@ export async function fetchFact(): Promise<boredapi> {
 }
 
 export async function getUsers(): Promise<User[]> {
-  const result: User[] = await prisma.$queryRaw`SELECT * FROM "User"`;
-  //const result: User[] = await prisma.user.findMany();
+  // const result: User[] = await prisma.$queryRaw`SELECT * FROM "User"`;
+  const result: User[] = await prisma.user.findMany();
   return result;
 }
 
+
+export async function getTransactions(): Promise<Transaction[]> {
+  // const result: Transaction[] = await prisma.$queryRaw`SELECT * FROM "Transaction"`;
+  const result: Transaction[] = await prisma.transaction.findMany();
+  return result;
+}
 
