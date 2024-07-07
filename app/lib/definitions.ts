@@ -28,4 +28,10 @@ export type TransactionFormat = {
   userId: number;
 };
 
+export type CategorySum = {
+  sum: number;
+  categoryId: number;
+  name: string;
+}
+
 

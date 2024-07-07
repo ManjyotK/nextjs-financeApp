@@ -1,23 +1,13 @@
-import { getTransactions } from "@/app/lib/data";
-import { Transaction } from "@prisma/client";
+import { getTransactionsJSON } from "@/app/lib/data";
 import TransactionTable from "@/app/ui/transactionTable";
 import { TransactionFormat } from "../lib/definitions";
 
 export default async function Page() {
-    const transactions:Transaction[] = await getTransactions();
-    const formattedTransactions:TransactionFormat[] = transactions.map((transaction) => {
-        return {
-            ...transaction,
-            amount: transaction.amount.toNumber(),
-            date: transaction.date.toISOString()
-        }
-    })
-
+    const formattedTransactions:TransactionFormat[] = await getTransactionsJSON();
 
     return (
         <div>
             <h1>Transactions</h1>
-
 
             <TransactionTable transactions={formattedTransactions}/>
 

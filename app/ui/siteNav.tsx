@@ -11,11 +11,9 @@ export default function App() {
   const pathname:string = usePathname();
 
   const menuItems = [
-    "Profile",
     "Dashboard",
     "Users",
     "Transactions",
-    "Help & Feedback",
     "Log Out",
   ];
 

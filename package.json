@@ -11,7 +11,8 @@
     "prismaStudio": "dotenv -e .env.local -- npx prisma studio",
     "devMigrate": "dotenv -e .env.local -- npx prisma migrate dev",
     "startup": "npm run startdb && npm run dev",
-    "psql": "docker exec -it nextjs-financeapp-db-1 psql -d DBNAME -U DBUSER"
+    "psql": "docker exec -it nextjs-financeapp-db-1 psql -d DBNAME -U DBUSER",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@google/generative-ai": "^0.14.1",
@@ -21,7 +22,8 @@
     "next": "^14.2.4",
     "prisma": "^5.14.0",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "recharts": "^2.12.7"
   },
   "devDependencies": {
     "@types/node": "^20",

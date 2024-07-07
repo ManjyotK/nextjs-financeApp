@@ -6,7 +6,7 @@ import { TransactionFormat } from "../lib/definitions";
 import { run } from "../lib/ai_actions";
 
 
-export default async function TransactionTable({
+export default function TransactionTable({
     transactions
 }:
 {
