@@ -1,6 +1,7 @@
-import { boredapi } from "./definitions";
+import { boredapi, CategorySum, TransactionFormat } from "./definitions";
 import prisma from "@/lib/db/prisma";
 import { User, Transaction } from "@prisma/client";
+import { Decimal } from "@prisma/client/runtime/library";
 
 
 export async function fetchFact(): Promise<boredapi> {
@@ -42,3 +43,39 @@ export async function getTransactions(): Promise<Transaction[]> {
   return result;
 }
 
+export async function getTransactionsJSON(): Promise<TransactionFormat[]> {
+  // const result: Transaction[] = await prisma.$queryRaw`SELECT * FROM "Transaction"`;
+  const result: Transaction[] = await prisma.transaction.findMany();
+
+  const formattedTransactions:TransactionFormat[] = result.map((transaction) => {
+    return {
+      ...transaction,
+      amount: transaction.amount.toNumber(),
+      date: transaction.date.toISOString()
+    }
+  })
+
+  return formattedTransactions;
+}
+
+
+export async function getTotalSumPerCategory(): Promise<CategorySum[]> {
+
+  const result:{sum:Decimal, categoryId:number, name:string}[] = await prisma.$queryRaw`
+    SELECT SUM("Transaction".amount) AS sum,
+     "Transaction"."categoryId" as categoryId,
+     "Category".name
+      FROM "Transaction"
+      JOIN "Category" ON "Transaction"."categoryId" = "Category"."id"
+      GROUP BY "Transaction"."categoryId", "Category".name
+      `;
+
+  const formattedResults:CategorySum[] = result.map((result) => {
+    return {
+      ...result,
+      sum: result.sum.toNumber()
+    }
+  })
+
+  return formattedResults;
+}

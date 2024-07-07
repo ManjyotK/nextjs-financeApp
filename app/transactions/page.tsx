@@ -1,19 +1,9 @@
-import { getTransactions } from "@/app/lib/data";
-import { Button } from "@nextui-org/react";
-import { Transaction } from "@prisma/client";
+import { getTransactionsJSON } from "@/app/lib/data";
 import TransactionTable from "@/app/ui/transactionTable";
 import { TransactionFormat } from "../lib/definitions";
 
 export default async function Page() {
-    const transactions:Transaction[] = await getTransactions();
-    const formattedTransactions:TransactionFormat[] = transactions.map((transaction) => {
-        return {
-            ...transaction,
-            amount: transaction.amount.toNumber(),
-            date: transaction.date.toISOString()
-        }
-    })
-
+    const formattedTransactions:TransactionFormat[] = await getTransactionsJSON();
 
     return (
         <div>
@@ -21,13 +11,6 @@ export default async function Page() {
 
             <TransactionTable transactions={formattedTransactions}/>
 
-            {/* <ul>
-                {transactions.map((transactions) => (
-                    <li key={transactions.id}>
-                        {transactions.description} ({transactions.amount.toString()})
-                    </li>
-                ))}
-            </ul> */}
 
 
             {/* <form action={async (formData: FormData) => {
