@@ -1,6 +1,7 @@
 import { getTransactionsJSON } from "@/app/lib/data";
 import TransactionTable from "@/app/ui/transactionTable";
 import { TransactionFormat } from "../lib/definitions";
+export const dynamic = "force-dynamic";
 
 export default async function Page() {
     const formattedTransactions:TransactionFormat[] = await getTransactionsJSON();
