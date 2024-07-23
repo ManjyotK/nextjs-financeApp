@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { Providers } from "./providers";
+// import { Providers } from "./providers";
+import { NextUIProvider } from "@nextui-org/react";
 import SiteNav from "@/app/ui/siteNav";
 import "./globals.css";
 
@@ -19,10 +20,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Providers>
+        <NextUIProvider>
           <SiteNav />
             <div className="p-6 md:overflow-y-auto md:px-12">{children}</div>
-        </Providers>
+        </NextUIProvider>
 
         
       </body>
