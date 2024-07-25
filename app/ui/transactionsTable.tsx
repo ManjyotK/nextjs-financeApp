@@ -9,51 +9,74 @@ import {
   TableCell,
   Input,
   Button,
+  DropdownTrigger,
+  Dropdown,
+  DropdownMenu,
+  DropdownItem,
   Chip,
+  User,
   Pagination,
+  Selection,
+  ChipProps,
   SortDescriptor,
   Tooltip
 } from "@nextui-org/react";
-import { Category } from "@prisma/client";
 import { PlusIcon } from "./icons/plusIcon";
 import { SearchIcon } from "./icons/searchIcon";
 import { EditIcon } from "./icons/editIcon";
 import { DeleteIcon } from "./icons/deleteIcon";
+import { TransactionFormat } from "../lib/definitions";
 import { categoryColorMap } from "../lib/definitions";
 
 function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+//#region
+const columns = [
+  {name: "DESCRIPTION", uid: "description", sortable: true},
+  {name: "AMOUNT", uid: "amount", sortable: true},
+  {name: "DATE", uid: "date", sortable: true},
+  {name: "CATEGORY", uid: "category", sortable: true},
+  {name: "ACTIONS", uid: "actions"},
+];
 
-export default function CategoryTable({categories} : {categories: Category[]}) {
 
+export default function TransactionsTable({
+    transactions
+}:
+{
+    transactions:TransactionFormat[]
+}) {
   const [filterValue, setFilterValue] = React.useState("");
+  const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]));
+  const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
-    column: "category",
-    direction: "ascending",
+    column: "date",
+    direction: "descending",
   });
 
   const [page, setPage] = React.useState(1);
 
   const hasSearchFilter = Boolean(filterValue);
 
-  const headerColumns = [
-    {name: "CATEGORY", uid: "category", sortable: true},
-    {name: "ACTIONS", uid: "actions", sortable: false},
-  ];
-
   const filteredItems = React.useMemo(() => {
-    let filteredCategoress = [...categories];
+    let filteredTransactions = [...transactions];
 
     if (hasSearchFilter) {
-      filteredCategoress = filteredCategoress.filter((category) =>
-        category.name.toLowerCase().includes(filterValue.toLowerCase()),
+      filteredTransactions = filteredTransactions.filter((transaction) =>
+        transaction.description.toLowerCase().includes(filterValue.toLowerCase()),
       );
     }
-    return filteredCategoress;
-  }, [categories, filterValue]);
+    // if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
+    //   filteredTransactions = filteredTransactions.filter((transaction) =>
+    //     Array.from(statusFilter).includes(transaction.categoryId),
+    //   );
+    // }
+
+    return filteredTransactions;
+  }, [transactions, filterValue, statusFilter]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -65,22 +88,41 @@ export default function CategoryTable({categories} : {categories: Category[]}) {
   }, [page, filteredItems, rowsPerPage]);
 
   const sortedItems = React.useMemo(() => {
-    return [...items].sort((a: Category, b: Category) => {
-      const first = a.name;
-      const second = b.name;
+    return [...items].sort((a: TransactionFormat, b: TransactionFormat) => {
+      const first = a[sortDescriptor.column as keyof TransactionFormat] as number;
+      const second = b[sortDescriptor.column as keyof TransactionFormat] as number;
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
       return sortDescriptor.direction === "descending" ? -cmp : cmp;
     });
   }, [sortDescriptor, items]);
 
-  const renderCell = React.useCallback((category: Category, columnKey: React.Key) => {
- 
+  const renderCell = React.useCallback((transaction: TransactionFormat, columnKey: React.Key) => {
+    const cellValue = transaction[columnKey as keyof TransactionFormat];
+
     switch (columnKey) {
+      case "description":
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-small capitalize">{cellValue}</p>
+          </div>
+        );
+      case "amount":
+          return (
+            <div className="flex flex-col">
+              <p className="text-bold text-small">${(Number(cellValue)).toFixed(2)}</p>
+            </div>
+          );
+      case "date":
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-small capitalize">{(new Date(transaction.date)).toUTCString()}</p>
+          </div>
+        );
       case "category":
         return (
-          <Chip className={categoryColorMap[category.id]} size="md" variant="flat">
-            {category.name}
+          <Chip className={categoryColorMap[transaction.categoryId]} size="sm" variant="flat">
+            {cellValue}
           </Chip>
         );
       case "actions":
@@ -100,7 +142,7 @@ export default function CategoryTable({categories} : {categories: Category[]}) {
           </div>
         );
       default:
-        return <></>
+        return cellValue;
     }
   }, []);
 
@@ -149,13 +191,34 @@ export default function CategoryTable({categories} : {categories: Category[]}) {
             onValueChange={onSearchChange}
           />
           <div className="flex gap-3">
+            {/* <Dropdown>
+              <DropdownTrigger className="hidden sm:flex">
+                <Button endContent={"END"} variant="flat">
+                  Status
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                disallowEmptySelection
+                aria-label="Table Columns"
+                closeOnSelect={false}
+                selectedKeys={statusFilter}
+                selectionMode="multiple"
+                onSelectionChange={setStatusFilter}
+              >
+                {statusOptions.map((status) => (
+                  <DropdownItem key={status.uid} className="capitalize">
+                    {capitalize(status.name)}
+                  </DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown> */}
             <Button color="primary" endContent={<PlusIcon />}>
               Add New
             </Button>
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-default-400 text-small">Total {categories.length} categories</span>
+          <span className="text-default-400 text-small">Total {transactions.length} transactions</span>
           <label className="flex items-center text-default-400 text-small">
             Rows per page:
             <select
@@ -172,15 +235,21 @@ export default function CategoryTable({categories} : {categories: Category[]}) {
     );
   }, [
     filterValue,
+    statusFilter,
     onSearchChange,
     onRowsPerPageChange,
-    categories.length,
+    transactions.length,
     hasSearchFilter,
   ]);
 
   const bottomContent = React.useMemo(() => {
     return (
-      <div className="py-2 px-2 flex justify-center">
+      <div className="py-2 px-2 flex justify-between items-center">
+        <span className="w-[30%] text-small text-default-400">
+          {selectedKeys === "all"
+            ? "All items selected"
+            : `${selectedKeys.size} of ${filteredItems.length} selected`}
+        </span>
         <Pagination
           isCompact
           showControls
@@ -190,26 +259,36 @@ export default function CategoryTable({categories} : {categories: Category[]}) {
           total={pages}
           onChange={setPage}
         />
+        <div className="hidden sm:flex w-[30%] justify-end gap-2">
+          <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onPreviousPage}>
+            Previous
+          </Button>
+          <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onNextPage}>
+            Next
+          </Button>
+        </div>
       </div>
     );
-  }, [items.length, page, pages, hasSearchFilter]);
+  }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
 
   return (
     <Table
       aria-label="Example table with custom cells, pagination and sorting"
       isHeaderSticky
-      isStriped
       bottomContent={bottomContent}
       bottomContentPlacement="outside"
       classNames={{
         wrapper: "max-h-[382px]",
       }}
+      selectedKeys={selectedKeys}
+      selectionMode="multiple"
       sortDescriptor={sortDescriptor}
       topContent={topContent}
       topContentPlacement="outside"
+      onSelectionChange={setSelectedKeys}
       onSortChange={setSortDescriptor}
     >
-      <TableHeader columns={headerColumns}>
+      <TableHeader columns={columns}>
         {(column) => (
           <TableColumn
             key={column.uid}
@@ -220,7 +299,7 @@ export default function CategoryTable({categories} : {categories: Category[]}) {
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody emptyContent={"No categories found"} items={sortedItems}>
+      <TableBody emptyContent={"No transactions found"} items={sortedItems}>
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}

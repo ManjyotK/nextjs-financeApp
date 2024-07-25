@@ -13,8 +13,7 @@ export default function App() {
   const menuItems = [
     "Dashboard",
     "Manage",
-    "Transactions",
-    "Log Out",
+    "Transactions"
   ];
 
   return (

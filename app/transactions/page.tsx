@@ -1,6 +1,8 @@
 import { getTransactionsJSON } from "@/app/lib/data";
 import TransactionTable from "@/app/ui/transactionTable";
+import TransactionsTable from "../ui/transactionsTable";
 import { TransactionFormat } from "../lib/definitions";
+import AiSummary from "../ui/aiSummary";
 export const dynamic = "force-dynamic";
 
 export default async function Page() {
@@ -10,7 +12,11 @@ export default async function Page() {
         <div>
             <h1>Transactions</h1>
 
-            <TransactionTable transactions={formattedTransactions}/>
+            {/* <AiSummary /> */}
+
+            <TransactionsTable transactions={formattedTransactions}/>
+
+            {/* <TransactionTable transactions={formattedTransactions}/> */}
 
 
 
