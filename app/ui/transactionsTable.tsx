@@ -50,12 +50,26 @@ export default function TransactionsTable({
 }) {
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]));
-  const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
+  const [categoryFilter, setcategoryFilter] = React.useState<Selection>("all");
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
     column: "date",
     direction: "descending",
   });
+
+  const categoryList:{categoryId:number; category:string}[] = React.useMemo(() => {
+    let uniqueTransactionCategories =  Array.from(new Map(
+      transactions.map(transaction => [transaction.categoryId, transaction])).values())
+      
+    let uniqueCategories = uniqueTransactionCategories.map((transaction:TransactionFormat) => (
+      {categoryId: transaction.categoryId,
+      category: transaction.category}
+    ))
+
+    return uniqueCategories.sort((a, b) => a.categoryId - b.categoryId)
+  }, [transactions])
+
+  // console.log(categoryList)
 
   const [page, setPage] = React.useState(1);
 
@@ -69,14 +83,15 @@ export default function TransactionsTable({
         transaction.description.toLowerCase().includes(filterValue.toLowerCase()),
       );
     }
-    // if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
-    //   filteredTransactions = filteredTransactions.filter((transaction) =>
-    //     Array.from(statusFilter).includes(transaction.categoryId),
-    //   );
-    // }
+    
+    if (categoryFilter !== "all" && Array.from(categoryFilter).length !== categoryList.length) {
+      filteredTransactions = filteredTransactions.filter((transaction) =>
+        Array.from(categoryFilter).includes((transaction.categoryId).toString()),
+      );
+    }
 
     return filteredTransactions;
-  }, [transactions, filterValue, statusFilter]);
+  }, [transactions, filterValue, categoryFilter]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -191,27 +206,27 @@ export default function TransactionsTable({
             onValueChange={onSearchChange}
           />
           <div className="flex gap-3">
-            {/* <Dropdown>
+            <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
                 <Button endContent={"END"} variant="flat">
-                  Status
+                  Categories
                 </Button>
               </DropdownTrigger>
               <DropdownMenu
                 disallowEmptySelection
                 aria-label="Table Columns"
                 closeOnSelect={false}
-                selectedKeys={statusFilter}
+                selectedKeys={categoryFilter}
                 selectionMode="multiple"
-                onSelectionChange={setStatusFilter}
+                onSelectionChange={setcategoryFilter}
               >
-                {statusOptions.map((status) => (
-                  <DropdownItem key={status.uid} className="capitalize">
-                    {capitalize(status.name)}
+                {categoryList.map((category) => (
+                  <DropdownItem key={category.categoryId} className="capitalize">
+                    {capitalize(category.category)}
                   </DropdownItem>
                 ))}
               </DropdownMenu>
-            </Dropdown> */}
+            </Dropdown>
             <Button color="primary" endContent={<PlusIcon />}>
               Add New
             </Button>
@@ -235,7 +250,7 @@ export default function TransactionsTable({
     );
   }, [
     filterValue,
-    statusFilter,
+    categoryFilter,
     onSearchChange,
     onRowsPerPageChange,
     transactions.length,
