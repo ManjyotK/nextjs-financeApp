@@ -1,6 +1,6 @@
 import { boredapi, CategorySum, TransactionFormat } from "./definitions";
 import prisma from "@/lib/db/prisma";
-import { User, Transaction } from "@prisma/client";
+import { User, Transaction, Category } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime/library";
 
 
@@ -43,15 +43,30 @@ export async function getTransactions(): Promise<Transaction[]> {
   return result;
 }
 
+export async function getCategories(): Promise<Category[]> {
+  // const result: Category[] = await prisma.$queryRaw`SELECT * FROM "Category"`;
+  const result: Category[] = await prisma.category.findMany();
+  return result;
+}
+
 export async function getTransactionsJSON(): Promise<TransactionFormat[]> {
   // const result: Transaction[] = await prisma.$queryRaw`SELECT * FROM "Transaction"`;
-  const result: Transaction[] = await prisma.transaction.findMany();
+  const result = await prisma.transaction.findMany({
+    include: {
+      category: {
+        select: {
+          name: true,
+        }
+      }
+    },
+  });
 
   const formattedTransactions:TransactionFormat[] = result.map((transaction) => {
     return {
       ...transaction,
       amount: transaction.amount.toNumber(),
-      date: transaction.date.toISOString()
+      date: transaction.date.toISOString(),
+      category: transaction.category.name,
     }
   })
 

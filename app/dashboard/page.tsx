@@ -1,4 +1,3 @@
-import { PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 import { CategorySum, TransactionFormat } from "@/app/lib/definitions" // Assuming you've defined this type
 import { getTotalSumPerCategory, getTransactionsJSON } from '../lib/data';
 import dynamic from 'next/dynamic';

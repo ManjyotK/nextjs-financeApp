@@ -1,6 +1,7 @@
 import { getUsers } from "@/app/lib/data";
 import { User } from "@prisma/client";
 import Form  from "@/app/ui/createUser";
+export const dynamic = "force-dynamic";
 
 export default async function Page() {
     const users:User[] = await getUsers();
