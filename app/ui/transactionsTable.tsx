@@ -136,7 +136,7 @@ export default function TransactionsTable({
         );
       case "category":
         return (
-          <Chip className={categoryColorMap[transaction.categoryId]} size="sm" variant="flat">
+          <Chip className={categoryColorMap[transaction.categoryId]} size="md" variant="flat">
             {cellValue}
           </Chip>
         );
@@ -144,16 +144,15 @@ export default function TransactionsTable({
         return (
           <div className="relative flex justify-center gap-2">
             <Tooltip content="Edit">
-              <Button isIconOnly color="primary" size="md" aria-label="Edit">
+              <Button isIconOnly className="bg-transparent" size="md" aria-label="Edit">
                 <EditIcon />
               </Button>
             </Tooltip>
             <Tooltip content="Delete">
-              <Button isIconOnly color="danger" size="md" aria-label="Delete">
+              <Button isIconOnly className="bg-transparent" size="md" aria-label="Delete">
                 <DeleteIcon />
               </Button>
             </Tooltip>
-
           </div>
         );
       default:

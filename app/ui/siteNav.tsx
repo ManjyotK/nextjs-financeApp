@@ -1,10 +1,8 @@
 "use client";
 import React from "react";
 import {Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem} from "@nextui-org/navbar";
-import {Button} from "@nextui-org/button";
 import {Link} from "@nextui-org/link";
 import { usePathname } from "next/navigation";
-// import {AcmeLogo} from "./AcmeLogo.jsx";
 
 export default function App() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -24,7 +22,6 @@ export default function App() {
           className="sm:hidden"
         />
         <NavbarBrand>
-          {/* <AcmeLogo /> */}
           <Link href="/" color="foreground" size="lg">
           <p className="font-bold text-inherit">Home</p>
           </Link>
@@ -41,14 +38,7 @@ export default function App() {
         ))}
       </NavbarContent>
       <NavbarContent justify="end">
-        <NavbarItem className="hidden lg:flex">
-          <Link href="#">Login</Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Button as={Link} color="primary" href="#" variant="flat">
-            Sign Up
-          </Button>
-        </NavbarItem>
+        <div className="invisible sm:visible"> </div>
       </NavbarContent>
       <NavbarMenu>
         {menuItems.map((item, index) => (

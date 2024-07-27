@@ -87,16 +87,15 @@ export default function CategoryTable({categories} : {categories: Category[]}) {
         return (
           <div className="relative flex justify-center gap-2">
             <Tooltip content="Edit">
-              <Button isIconOnly color="primary" size="md" aria-label="Edit">
+              <Button isIconOnly className="bg-transparent" size="md" aria-label="Edit">
                 <EditIcon />
               </Button>
             </Tooltip>
             <Tooltip content="Delete">
-              <Button isIconOnly color="danger" size="md" aria-label="Delete">
+              <Button isIconOnly className="bg-transparent" size="md" aria-label="Delete">
                 <DeleteIcon />
               </Button>
             </Tooltip>
-
           </div>
         );
       default:

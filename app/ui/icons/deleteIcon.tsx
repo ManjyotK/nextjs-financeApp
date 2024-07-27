@@ -11,7 +11,7 @@ export const DeleteIcon = (props: IconSvgProps) => (
     viewBox="0 0 24 24"
     width="2em"
     xmlns="http://www.w3.org/2000/svg"
-    stroke="#000000"
+    stroke="#E34234"
     strokeWidth="1.5"
     {...props}
     >
