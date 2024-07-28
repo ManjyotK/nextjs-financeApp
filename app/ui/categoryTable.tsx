@@ -20,6 +20,7 @@ import { EditIcon } from "./icons/editIcon";
 import { categoryColorMap } from "../lib/definitions";
 import DeleteCategoryForm from "./deleteCategory";
 import CreateCategoryForm from "./createCategory";
+import EditCategoryForm from "./editCategory";
 
 function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -86,12 +87,8 @@ export default function CategoryTable({categories} : {categories: Category[]}) {
       case "actions":
         return (
           <div className="relative flex justify-center gap-2">
-            <Tooltip content="Edit">
-              <Button isIconOnly className="bg-transparent" size="md" aria-label="Edit">
-                <EditIcon />
-              </Button>
-            </Tooltip>
-              <DeleteCategoryForm category={category} />
+            <EditCategoryForm category={category} />
+            <DeleteCategoryForm category={category} />
           </div>
         );
       default:

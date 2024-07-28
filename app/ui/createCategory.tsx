@@ -25,7 +25,8 @@ export default function CreateCategoryForm() {
               <ModalBody>
                 <Input
                   autoFocus
-                  placeholder="Enter category name"
+                  label="Category name"
+                  required={true}
                   variant="bordered"
                   name='category'
                 />

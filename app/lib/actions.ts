@@ -36,6 +36,15 @@ export async function deleteCategory(id: number) {
   redirect('/manage');
 }
 
+export async function updateCategory(id: number, formData: FormData) {
+  const newCategory = {
+    name: formData.get("category") as string,
+  }
+  await prisma.category.update({ where: { id }, data: newCategory });
+  revalidatePath('/manage');
+  redirect('/manage');
+}
+
 export async function createTransaction(formData: FormData) {
   const newTransaction = {
     description: formData.get("description") as string,
