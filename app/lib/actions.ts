@@ -48,3 +48,10 @@ export async function createTransaction(formData: FormData) {
   revalidatePath('/transactions');
   redirect('/transactions');
 }
+
+export async function deleteTransaction(id: number) {
+  // await prisma.$executeRaw`DELETE FROM "Transaction" WHERE id = ${id};`
+  await prisma.transaction.delete({ where: { id } });
+  revalidatePath('/transactions');
+  redirect('/transactions');
+}

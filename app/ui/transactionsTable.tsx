@@ -30,6 +30,7 @@ import { categoryColorMap } from "../lib/definitions";
 import { getCategories } from "../lib/data";
 import { Category } from "@prisma/client";
 import CreateTransactionForm from "./createTransaction";
+import DeleteTransactionForm from "./deleteTransaction";
 
 function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -136,11 +137,7 @@ export default function TransactionsTable({ transactions, categories }: {
                 <EditIcon />
               </Button>
             </Tooltip>
-            <Tooltip content="Delete">
-              <Button isIconOnly className="bg-transparent" size="md" aria-label="Delete">
-                <DeleteIcon />
-              </Button>
-            </Tooltip>
+            <DeleteTransactionForm transaction={transaction} />
           </div>
         );
       default:
