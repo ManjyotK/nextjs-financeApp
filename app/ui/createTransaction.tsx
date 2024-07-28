@@ -27,18 +27,21 @@ export default function CreateTransactionForm({categories}: {categories: Categor
               <ModalBody>
                 <Input
                   autoFocus
-                  placeholder="Enter transaction description"
+                  label="Transaction description"
+                  required={true}
                   variant="bordered"
                   name='description'
                 />
                 <Input
-                  placeholder="Enter transaction amount"
+                  label="Transaction amount"
+                  required={true}
                   variant="bordered"
                   name='amount'
                 />
                 <Select
                   items={categories}
-                  placeholder="Select a category"
+                  label="Select a category"
+                  required={true}
                   className="max-w-xs"
                   name='categoryId'
                 >

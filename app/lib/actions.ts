@@ -55,3 +55,16 @@ export async function deleteTransaction(id: number) {
   revalidatePath('/transactions');
   redirect('/transactions');
 }
+
+export async function updateTransaction(id: number, formData: FormData) {
+  const newTransaction = {
+    description: formData.get("description") as string,
+    amount: Number(formData.get("amount")),
+    date: new Date(),
+    categoryId: Number(formData.get("categoryId")),
+    userId: 11,
+  }
+  await prisma.transaction.update({ where: { id }, data: newTransaction });
+  revalidatePath('/transactions');
+  redirect('/transactions');
+}

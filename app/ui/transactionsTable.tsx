@@ -31,6 +31,7 @@ import { getCategories } from "../lib/data";
 import { Category } from "@prisma/client";
 import CreateTransactionForm from "./createTransaction";
 import DeleteTransactionForm from "./deleteTransaction";
+import EditTransactionForm from "./editTransaction";
 
 function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -132,11 +133,7 @@ export default function TransactionsTable({ transactions, categories }: {
       case "actions":
         return (
           <div className="relative flex justify-center gap-2">
-            <Tooltip content="Edit">
-              <Button isIconOnly className="bg-transparent" size="md" aria-label="Edit">
-                <EditIcon />
-              </Button>
-            </Tooltip>
+            <EditTransactionForm transaction={transaction} categories={categories}/>
             <DeleteTransactionForm transaction={transaction} />
           </div>
         );

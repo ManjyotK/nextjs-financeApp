@@ -8,7 +8,7 @@ import { TransactionFormat } from "../lib/definitions";
 export default function DeleteTransactionForm({transaction}: {transaction: TransactionFormat}) {
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
 
-  const deleteCategoryAction = deleteTransaction.bind(null, transaction.id);
+  const deleteTransactionAction = deleteTransaction.bind(null, transaction.id);
 
   return (
     <Tooltip content="Delete">
@@ -25,7 +25,7 @@ export default function DeleteTransactionForm({transaction}: {transaction: Trans
             {(onClose) => (
               <>
                 <ModalHeader className="flex flex-col gap-1">Create</ModalHeader>
-                <form action={deleteCategoryAction}>
+                <form action={deleteTransactionAction}>
                 <ModalBody>
                   <h1>Are you sure you want to delete {transaction.description}?</h1>
                 </ModalBody>
