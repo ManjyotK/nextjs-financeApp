@@ -27,6 +27,11 @@ import { EditIcon } from "./icons/editIcon";
 import { DeleteIcon } from "./icons/deleteIcon";
 import { TransactionFormat } from "../lib/definitions";
 import { categoryColorMap } from "../lib/definitions";
+import { getCategories } from "../lib/data";
+import { Category } from "@prisma/client";
+import CreateTransactionForm from "./createTransaction";
+import DeleteTransactionForm from "./deleteTransaction";
+import EditTransactionForm from "./editTransaction";
 
 function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -42,12 +47,11 @@ const columns = [
 ];
 
 
-export default function TransactionsTable({
-    transactions
-}:
-{
-    transactions:TransactionFormat[]
+export default function TransactionsTable({ transactions, categories }: {
+  transactions: TransactionFormat[];
+  categories: Category[];
 }) {
+  
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]));
   const [categoryFilter, setcategoryFilter] = React.useState<Selection>("all");
@@ -56,20 +60,6 @@ export default function TransactionsTable({
     column: "date",
     direction: "descending",
   });
-
-  const categoryList:{categoryId:number; category:string}[] = React.useMemo(() => {
-    let uniqueTransactionCategories =  Array.from(new Map(
-      transactions.map(transaction => [transaction.categoryId, transaction])).values())
-      
-    let uniqueCategories = uniqueTransactionCategories.map((transaction:TransactionFormat) => (
-      {categoryId: transaction.categoryId,
-      category: transaction.category}
-    ))
-
-    return uniqueCategories.sort((a, b) => a.categoryId - b.categoryId)
-  }, [transactions])
-
-  // console.log(categoryList)
 
   const [page, setPage] = React.useState(1);
 
@@ -84,7 +74,7 @@ export default function TransactionsTable({
       );
     }
     
-    if (categoryFilter !== "all" && Array.from(categoryFilter).length !== categoryList.length) {
+    if (categoryFilter !== "all" && Array.from(categoryFilter).length !== categories.length) {
       filteredTransactions = filteredTransactions.filter((transaction) =>
         Array.from(categoryFilter).includes((transaction.categoryId).toString()),
       );
@@ -136,24 +126,15 @@ export default function TransactionsTable({
         );
       case "category":
         return (
-          <Chip className={categoryColorMap[transaction.categoryId]} size="sm" variant="flat">
+          <Chip className={categoryColorMap[transaction.categoryId]} size="md" variant="flat">
             {cellValue}
           </Chip>
         );
       case "actions":
         return (
           <div className="relative flex justify-center gap-2">
-            <Tooltip content="Edit">
-              <Button isIconOnly color="primary" size="md" aria-label="Edit">
-                <EditIcon />
-              </Button>
-            </Tooltip>
-            <Tooltip content="Delete">
-              <Button isIconOnly color="danger" size="md" aria-label="Delete">
-                <DeleteIcon />
-              </Button>
-            </Tooltip>
-
+            <EditTransactionForm transaction={transaction} categories={categories}/>
+            <DeleteTransactionForm transaction={transaction} />
           </div>
         );
       default:
@@ -220,16 +201,14 @@ export default function TransactionsTable({
                 selectionMode="multiple"
                 onSelectionChange={setcategoryFilter}
               >
-                {categoryList.map((category) => (
-                  <DropdownItem key={category.categoryId} className="capitalize">
-                    {capitalize(category.category)}
+                {categories.map((category) => (
+                  <DropdownItem key={category.id} className="capitalize">
+                    {capitalize(category.name)}
                   </DropdownItem>
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <Button color="primary" endContent={<PlusIcon />}>
-              Add New
-            </Button>
+            <CreateTransactionForm categories={categories} />
           </div>
         </div>
         <div className="flex justify-between items-center">

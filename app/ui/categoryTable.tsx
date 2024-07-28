@@ -15,11 +15,12 @@ import {
   Tooltip
 } from "@nextui-org/react";
 import { Category } from "@prisma/client";
-import { PlusIcon } from "./icons/plusIcon";
 import { SearchIcon } from "./icons/searchIcon";
 import { EditIcon } from "./icons/editIcon";
-import { DeleteIcon } from "./icons/deleteIcon";
 import { categoryColorMap } from "../lib/definitions";
+import DeleteCategoryForm from "./deleteCategory";
+import CreateCategoryForm from "./createCategory";
+import EditCategoryForm from "./editCategory";
 
 function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -86,17 +87,8 @@ export default function CategoryTable({categories} : {categories: Category[]}) {
       case "actions":
         return (
           <div className="relative flex justify-center gap-2">
-            <Tooltip content="Edit">
-              <Button isIconOnly color="primary" size="md" aria-label="Edit">
-                <EditIcon />
-              </Button>
-            </Tooltip>
-            <Tooltip content="Delete">
-              <Button isIconOnly color="danger" size="md" aria-label="Delete">
-                <DeleteIcon />
-              </Button>
-            </Tooltip>
-
+            <EditCategoryForm category={category} />
+            <DeleteCategoryForm category={category} />
           </div>
         );
       default:
@@ -149,9 +141,7 @@ export default function CategoryTable({categories} : {categories: Category[]}) {
             onValueChange={onSearchChange}
           />
           <div className="flex gap-3">
-            <Button color="primary" endContent={<PlusIcon />}>
-              Add New
-            </Button>
+            <CreateCategoryForm />
           </div>
         </div>
         <div className="flex justify-between items-center">
