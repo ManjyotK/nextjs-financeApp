@@ -35,3 +35,16 @@ export async function deleteCategory(id: number) {
   revalidatePath('/manage');
   redirect('/manage');
 }
+
+export async function createTransaction(formData: FormData) {
+  const newTransaction = {
+    description: formData.get("description") as string,
+    amount: Number(formData.get("amount")),
+    date: new Date(),
+    categoryId: Number(formData.get("categoryId")),
+    userId: 11,
+  }
+  await prisma.transaction.create({ data: newTransaction });
+  revalidatePath('/transactions');
+  redirect('/transactions');
+}
