@@ -13,19 +13,10 @@ export default async function Page(){
   // Get the total sum per category
   const categorySums:CategorySum[] = await getTotalSumPerCategory();
 
-  
-
   return (
-
-    <div>
-      <h1>Finance Dashboard</h1>
-
-      <div className="flex justify-center gap-4">
-        <LineChartPage data={data} />
-        <PieChartPage data={categorySums} />
-      </div>
-
-      
+    <div className="flex justify-center gap-4">
+      <LineChartPage data={data} />
+      <PieChartPage data={categorySums} />
     </div>
   );
 };
