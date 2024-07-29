@@ -25,15 +25,15 @@ export async function createCategory(formData: FormData) {
   }
   // await prisma.$executeRaw`INSERT INTO "Category" ("category") VALUES (${newCategory.category});`
   await prisma.category.create({ data: newCategory });
-  revalidatePath('/manage');
-  redirect('/manage');
+  revalidatePath('/categories');
+  redirect('/categories');
 }
 
 export async function deleteCategory(id: number) {
   // await prisma.$executeRaw`DELETE FROM "Category" WHERE id = ${id};`
   await prisma.category.delete({ where: { id } });
-  revalidatePath('/manage');
-  redirect('/manage');
+  revalidatePath('/categories');
+  redirect('/categories');
 }
 
 export async function updateCategory(id: number, formData: FormData) {
@@ -41,8 +41,8 @@ export async function updateCategory(id: number, formData: FormData) {
     name: formData.get("category") as string,
   }
   await prisma.category.update({ where: { id }, data: newCategory });
-  revalidatePath('/manage');
-  redirect('/manage');
+  revalidatePath('/categories');
+  redirect('/categories');
 }
 
 export async function createTransaction(formData: FormData) {
