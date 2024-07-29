@@ -10,8 +10,8 @@ export default async function Page() {
 
     return (
         <div>
-            {/* <AiSummary /> */}
             <TransactionsTable transactions={formattedTransactions} categories={categoryList}/>
+            <AiSummary />
         </div>
     );
 }
