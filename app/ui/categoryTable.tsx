@@ -8,15 +8,12 @@ import {
   TableRow,
   TableCell,
   Input,
-  Button,
   Chip,
   Pagination,
   SortDescriptor,
-  Tooltip
 } from "@nextui-org/react";
 import { Category } from "@prisma/client";
 import { SearchIcon } from "./icons/searchIcon";
-import { EditIcon } from "./icons/editIcon";
 import { categoryColorMap } from "../lib/definitions";
 import DeleteCategoryForm from "./deleteCategory";
 import CreateCategoryForm from "./createCategory";
@@ -57,30 +54,34 @@ export default function CategoryTable({categories} : {categories: Category[]}) {
   }, [categories, filterValue]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
+  
+  
+  const sortedItems = React.useMemo(() => {
+      return [...filteredItems].sort((a: Category, b: Category) => {
+        const first = a.name;
+        const second = b.name;
+        const cmp = first < second ? -1 : first > second ? 1 : 0;
 
+        return sortDescriptor.direction === "descending" ? -cmp : cmp;
+      });
+    }, [sortDescriptor, filteredItems]);
+
+  
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
 
-    return filteredItems.slice(start, end);
-  }, [page, filteredItems, rowsPerPage]);
+    return sortedItems.slice(start, end);
+  }, [page, sortedItems, rowsPerPage]);
 
-  const sortedItems = React.useMemo(() => {
-    return [...items].sort((a: Category, b: Category) => {
-      const first = a.name;
-      const second = b.name;
-      const cmp = first < second ? -1 : first > second ? 1 : 0;
-
-      return sortDescriptor.direction === "descending" ? -cmp : cmp;
-    });
-  }, [sortDescriptor, items]);
+ 
 
   const renderCell = React.useCallback((category: Category, columnKey: React.Key) => {
  
     switch (columnKey) {
       case "category":
         return (
-          <Chip className={categoryColorMap[category.id]} size="md" variant="flat">
+          <Chip className={categoryColorMap[(category.id % Object.keys(categoryColorMap).length)]} size="md" variant="flat">
             {category.name}
           </Chip>
         );
@@ -210,7 +211,7 @@ export default function CategoryTable({categories} : {categories: Category[]}) {
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody emptyContent={"No categories found"} items={sortedItems}>
+      <TableBody emptyContent={"No categories found"} items={items}>
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}

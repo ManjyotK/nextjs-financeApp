@@ -14,20 +14,13 @@ import {
   DropdownMenu,
   DropdownItem,
   Chip,
-  User,
   Pagination,
   Selection,
-  ChipProps,
   SortDescriptor,
-  Tooltip
 } from "@nextui-org/react";
-import { PlusIcon } from "./icons/plusIcon";
 import { SearchIcon } from "./icons/searchIcon";
-import { EditIcon } from "./icons/editIcon";
-import { DeleteIcon } from "./icons/deleteIcon";
 import { TransactionFormat } from "../lib/definitions";
 import { categoryColorMap } from "../lib/definitions";
-import { getCategories } from "../lib/data";
 import { Category } from "@prisma/client";
 import CreateTransactionForm from "./createTransaction";
 import DeleteTransactionForm from "./deleteTransaction";
@@ -85,22 +78,24 @@ export default function TransactionsTable({ transactions, categories }: {
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
-  const items = React.useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
-
-    return filteredItems.slice(start, end);
-  }, [page, filteredItems, rowsPerPage]);
-
   const sortedItems = React.useMemo(() => {
-    return [...items].sort((a: TransactionFormat, b: TransactionFormat) => {
+    return [...filteredItems].sort((a: TransactionFormat, b: TransactionFormat) => {
       const first = a[sortDescriptor.column as keyof TransactionFormat] as number;
       const second = b[sortDescriptor.column as keyof TransactionFormat] as number;
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
       return sortDescriptor.direction === "descending" ? -cmp : cmp;
     });
-  }, [sortDescriptor, items]);
+  }, [sortDescriptor, filteredItems]);
+
+  const items = React.useMemo(() => {
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+
+    return sortedItems.slice(start, end);
+  }, [page, sortedItems, rowsPerPage]);
+
+  
 
   const renderCell = React.useCallback((transaction: TransactionFormat, columnKey: React.Key) => {
     const cellValue = transaction[columnKey as keyof TransactionFormat];
@@ -121,12 +116,12 @@ export default function TransactionsTable({ transactions, categories }: {
       case "date":
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{(new Date(transaction.date)).toUTCString()}</p>
+            <p className="text-bold text-small capitalize">{(new Date(transaction.date)).toLocaleString()}</p>
           </div>
         );
       case "category":
         return (
-          <Chip className={categoryColorMap[transaction.categoryId]} size="md" variant="flat">
+          <Chip className={categoryColorMap[(transaction.categoryId % Object.keys(categoryColorMap).length)]} size="md" variant="flat">
             {cellValue}
           </Chip>
         );
@@ -293,7 +288,7 @@ export default function TransactionsTable({ transactions, categories }: {
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody emptyContent={"No transactions found"} items={sortedItems}>
+      <TableBody emptyContent={"No transactions found"} items={items}>
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}

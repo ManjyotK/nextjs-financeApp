@@ -1,10 +1,11 @@
 "use client";
 
 import { updateTransaction } from "@/app/lib/actions";
-import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, Tooltip, useDisclosure } from '@nextui-org/react';
+import { Button, DatePicker, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, Tooltip, useDisclosure } from '@nextui-org/react';
 import { TransactionFormat } from "../lib/definitions";
 import { EditIcon } from "./icons/editIcon";
 import { Category } from "@prisma/client";
+import {now, getLocalTimeZone} from "@internationalized/date";
 
 export default function EditTransactionForm({transaction, categories}: {transaction: TransactionFormat, categories: Category[]}) {
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
@@ -42,6 +43,14 @@ export default function EditTransactionForm({transaction, categories}: {transact
                   variant="bordered"
                   defaultValue={transaction.amount.toString()}
                   name='amount'
+                />
+                <DatePicker
+                  label="Event Date"
+                  variant="bordered"
+                  hideTimeZone
+                  showMonthAndYearPickers
+                  defaultValue={now(getLocalTimeZone())}
+                  name="date"
                 />
                 <Select
                   items={categories}

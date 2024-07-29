@@ -1,10 +1,8 @@
 "use server";
 
 import prisma from "@/lib/db/prisma";
-import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { format } from "util";
 
 export async function createUser(formData: FormData) {
 
@@ -46,13 +44,17 @@ export async function updateCategory(id: number, formData: FormData) {
 }
 
 export async function createTransaction(formData: FormData) {
+
+  const dateStr = (formData.get("date") as string).split("[")[0].trim();
+
   const newTransaction = {
     description: formData.get("description") as string,
     amount: Number(formData.get("amount")),
-    date: new Date(),
+    date: new Date(Date.parse(dateStr)),
     categoryId: Number(formData.get("categoryId")),
     userId: 11,
   }
+  
   await prisma.transaction.create({ data: newTransaction });
   revalidatePath('/transactions');
   redirect('/transactions');
@@ -66,10 +68,13 @@ export async function deleteTransaction(id: number) {
 }
 
 export async function updateTransaction(id: number, formData: FormData) {
+
+  const dateStr = (formData.get("date") as string).split("[")[0].trim();
+
   const newTransaction = {
     description: formData.get("description") as string,
     amount: Number(formData.get("amount")),
-    date: new Date(),
+    date: new Date(Date.parse(dateStr)),
     categoryId: Number(formData.get("categoryId")),
     userId: 11,
   }
