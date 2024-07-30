@@ -30,7 +30,6 @@ function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-//#region
 const columns = [
   {name: "DESCRIPTION", uid: "description", sortable: true},
   {name: "AMOUNT", uid: "amount", sortable: true},
@@ -40,11 +39,21 @@ const columns = [
 ];
 
 
+/**
+ * TransactionsTable component displays a table of transactions with pagination, sorting, search and filtering functionality.
+ * It also provides actions to edit and delete transactions.
+ *
+ * @param {Object} props - The props object containing the transactions array and the categories array.
+ * @param {TransactionFormat[]} props.transactions - The array of transactions to display in the table.
+ * @param {Category[]} props.categories - The array of categories to use for filtering.
+ * @return {JSX.Element} The TransactionsTable component.
+ */
 export default function TransactionsTable({ transactions, categories }: {
   transactions: TransactionFormat[];
   categories: Category[];
 }) {
   
+  // State variables
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]));
   const [categoryFilter, setcategoryFilter] = React.useState<Selection>("all");
@@ -54,10 +63,14 @@ export default function TransactionsTable({ transactions, categories }: {
     direction: "descending",
   });
 
+  /** Current page number for the transactions table */
   const [page, setPage] = React.useState(1);
 
+  /** Check if there is a search filter applied */
   const hasSearchFilter = Boolean(filterValue);
 
+  // Computed properties
+  /** Filtered and sorted transactions */
   const filteredItems = React.useMemo(() => {
     let filteredTransactions = [...transactions];
 
@@ -76,8 +89,10 @@ export default function TransactionsTable({ transactions, categories }: {
     return filteredTransactions;
   }, [transactions, filterValue, categoryFilter]);
 
+  /** Total number of pages for the transactions table */
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
+  /** Sorted transactions */
   const sortedItems = React.useMemo(() => {
     return [...filteredItems].sort((a: TransactionFormat, b: TransactionFormat) => {
       const first = a[sortDescriptor.column as keyof TransactionFormat] as number;
@@ -88,6 +103,7 @@ export default function TransactionsTable({ transactions, categories }: {
     });
   }, [sortDescriptor, filteredItems]);
 
+  /** Items to display on the current page */
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
@@ -95,6 +111,7 @@ export default function TransactionsTable({ transactions, categories }: {
     return sortedItems.slice(start, end);
   }, [page, sortedItems, rowsPerPage]);
 
+  // Render functions
   
 
   const renderCell = React.useCallback((transaction: TransactionFormat, columnKey: React.Key) => {
@@ -137,6 +154,7 @@ export default function TransactionsTable({ transactions, categories }: {
     }
   }, []);
 
+  // Event handlers
   const onNextPage = React.useCallback(() => {
     if (page < pages) {
       setPage(page + 1);
@@ -168,6 +186,7 @@ export default function TransactionsTable({ transactions, categories }: {
     setPage(1)
   },[])
 
+  // Top content of the table
   const topContent = React.useMemo(() => {
     return (
       <div className="flex flex-col gap-4">
@@ -231,6 +250,7 @@ export default function TransactionsTable({ transactions, categories }: {
     hasSearchFilter,
   ]);
 
+  // Bottom content of the table
   const bottomContent = React.useMemo(() => {
     return (
       <div className="py-2 px-2 flex justify-between items-center">
@@ -260,6 +280,7 @@ export default function TransactionsTable({ transactions, categories }: {
     );
   }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
 
+  // Table
   return (
     <Table
       aria-label="Example table with custom cells, pagination and sorting"

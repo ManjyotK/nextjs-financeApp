@@ -1,7 +1,5 @@
-// This file contains type definitions for your data.
+// This file contains type definitions for the data.
 // It describes the shape of the data, and what data type each property should accept.
-// For simplicity of teaching, we're manually defining these types.
-// However, these types are generated automatically if you're using an ORM such as Prisma.
 import {SVGProps} from "react";
 
 export const categoryColorMap:{[key: number]: string} = {
@@ -17,17 +15,6 @@ export const categoryColorMap:{[key: number]: string} = {
   10: 'bg-gray-200',
   11: 'bg-lime-300',
   12: 'bg-cyan-400'
-};
-
-
-export type boredapi = {
-  activity: string;
-  type: string;
-  participants: number;
-  price: number;
-  link: string;
-  key: string;
-  accessibility: number;
 };
 
 export type User = {

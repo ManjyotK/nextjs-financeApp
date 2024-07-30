@@ -24,8 +24,17 @@ function capitalize(str: string) {
 }
 
 
+/**
+ * CategoryTable component displays a table of categories with pagination, sorting and search functionality.
+ * It also provides actions to edit and delete categories.
+ *
+ * @param {Object} props - The props object containing the categories array.
+ * @param {Category[]} props.categories - The array of categories to display in the table.
+ * @return {JSX.Element} The CategoryTable component.
+ */
 export default function CategoryTable({categories} : {categories: Category[]}) {
 
+  // State variables
   const [filterValue, setFilterValue] = React.useState("");
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
@@ -35,22 +44,25 @@ export default function CategoryTable({categories} : {categories: Category[]}) {
 
   const [page, setPage] = React.useState(1);
 
+  // Helper functions
   const hasSearchFilter = Boolean(filterValue);
 
+  // Table columns
   const headerColumns = [
     {name: "CATEGORY", uid: "category", sortable: true},
     {name: "ACTIONS", uid: "actions", sortable: false},
   ];
 
+  // Filtered and sorted items
   const filteredItems = React.useMemo(() => {
-    let filteredCategoress = [...categories];
+    let filteredCategories = [...categories];
 
     if (hasSearchFilter) {
-      filteredCategoress = filteredCategoress.filter((category) =>
+      filteredCategories = filteredCategories.filter((category) =>
         category.name.toLowerCase().includes(filterValue.toLowerCase()),
       );
     }
-    return filteredCategoress;
+    return filteredCategories;
   }, [categories, filterValue]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
@@ -76,6 +88,7 @@ export default function CategoryTable({categories} : {categories: Category[]}) {
 
  
 
+  // Render cell based on column key
   const renderCell = React.useCallback((category: Category, columnKey: React.Key) => {
  
     switch (columnKey) {
@@ -97,6 +110,7 @@ export default function CategoryTable({categories} : {categories: Category[]}) {
     }
   }, []);
 
+  // Event handlers
   const onNextPage = React.useCallback(() => {
     if (page < pages) {
       setPage(page + 1);
@@ -128,6 +142,7 @@ export default function CategoryTable({categories} : {categories: Category[]}) {
     setPage(1)
   },[])
 
+  // Top content of the table
   const topContent = React.useMemo(() => {
     return (
       <div className="flex flex-col gap-4">
@@ -169,6 +184,7 @@ export default function CategoryTable({categories} : {categories: Category[]}) {
     hasSearchFilter,
   ]);
 
+  // Bottom content of the table
   const bottomContent = React.useMemo(() => {
     return (
       <div className="py-2 px-2 flex justify-center">

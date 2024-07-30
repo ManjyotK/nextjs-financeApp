@@ -5,24 +5,49 @@ import DashboardCard from "./_components/card";
 const LineChartPage = dynamic(() => import('./_components/LineChart'), { ssr: false });
 const PieChartPage = dynamic(() => import('./_components/PieChart'), { ssr: false });
 
+/**
+ * This is the main function for the dashboard page.
+ * It fetches the transaction data and category sums from the server.
+ * It then renders the dashboard cards and the line and pie charts.
+ *
+ * @returns {Promise<JSX.Element>} The JSX element representing the dashboard page.
+ */
 export default async function Page(){
-
+  
+  // Fetch the transaction data from the server
   const data: TransactionFormat[] = await getTransactionsJSON();
+  
   // Sort the data by date
   data.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-  // Get the total sum per category
+  // Fetch the total sum per category from the server
   const categorySums:CategorySum[] = await getTotalSumPerCategory();
 
   return (
     <>
+      {/* Render the dashboard cards */}
       <div className="md:flex md:pb-4 justify-center gap-4">
-        <DashboardCard title="Total Spent" value={"$" + (data.reduce((sum, t) => sum + t.amount, 0)).toFixed(2)}/>
-        <DashboardCard title="Total Transactions" value={data.length.toString()}/>
-        <DashboardCard title="Total Categories" value={categorySums.length.toString()}/>
+        {/* Render the Total Spent card */}
+        <DashboardCard
+          title="Total Spent"
+          value={"$" + (data.reduce((sum, t) => sum + t.amount, 0)).toFixed(2)}
+        />
+        {/* Render the Total Transactions card */}
+        <DashboardCard
+          title="Total Transactions"
+          value={data.length.toString()}
+        />
+        {/* Render the Total Categories card */}
+        <DashboardCard
+          title="Total Categories"
+          value={categorySums.length.toString()}
+        />
       </div>
+      {/* Render the line and pie charts */}
       <div className="md:flex justify-center gap-4">
+        {/* Render the Line Chart */}
         <LineChartPage data={data} />
+        {/* Render the Pie Chart */}
         <PieChartPage data={categorySums} />
       </div>
     </>
