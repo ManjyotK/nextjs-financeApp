@@ -1,5 +1,7 @@
 import { getCategories } from "../lib/data";
 import CategoryTable from "../ui/categoryTable";
+export const dynamic = "force-dynamic";
+
 
 /**
  * Renders the Categories page with a table of categories fetched from the database.

@@ -1,9 +1,10 @@
 import { CategorySum, TransactionFormat } from "@/app/lib/definitions" // Assuming you've defined this type
 import { getTotalSumPerCategory, getTransactionsJSON } from '../lib/data';
-import dynamic from 'next/dynamic';
+import dynamicComponent from 'next/dynamic' ;
 import DashboardCard from "./_components/card";
-const LineChartPage = dynamic(() => import('./_components/LineChart'), { ssr: false });
-const PieChartPage = dynamic(() => import('./_components/PieChart'), { ssr: false });
+const LineChartPage = dynamicComponent(() => import('./_components/LineChart'), { ssr: false });
+const PieChartPage = dynamicComponent(() => import('./_components/PieChart'), { ssr: false });
+export const dynamic = "force-dynamic";
 
 /**
  * This is the main function for the dashboard page.
