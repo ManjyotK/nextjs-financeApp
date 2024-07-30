@@ -1,21 +1,26 @@
 "use client";
 
-
-import { useFormState } from 'react-dom';
 import { createUser } from "@/app/lib/actions";
 
+/**
+ * Form component for creating a new user.
+ * @returns The JSX for the form.
+ */
 export default function Form() {
+  // The form for creating a new user
   return (
     <form action={createUser}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
 
         {/* Name */}
         <div className="mb-4">
+          {/* Label for the name input */}
           <label htmlFor="amount" className="mb-2 block text-sm font-medium">
             Enter name
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
+              {/* Name input */}
               <input
                 id="name"
                 name="name"
@@ -29,11 +34,13 @@ export default function Form() {
 
         {/* Email Address */}
         <div className="mb-4">
+          {/* Label for the email address input */}
           <label htmlFor="amount" className="mb-2 block text-sm font-medium">
             Enter email address
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
+              {/* Email address input */}
               <input
                 id="email"
                 name="email"
@@ -45,6 +52,7 @@ export default function Form() {
           </div>
         </div>
       </div>
+      {/* Submit button */}
       <div className="mt-6 flex justify-end gap-4">
         <button type="submit">Create User</button>
       </div>
