@@ -55,7 +55,7 @@ export async function createCategory(formData: FormData) {
  * @param id - The ID of the category to be deleted.
  * @returns A Promise that resolves when the category is deleted.
  */
-export async function deleteCategory(id: number) {
+export async function deleteCategory(id: number): Promise<"OK" | "Not_Empty" | "Unknown_Error"> {
   try {
     // Delete the category from the database using Prisma's ORM
     const res = await prisma.category.delete({ where: { id } });
@@ -63,16 +63,17 @@ export async function deleteCategory(id: number) {
     //  Revalidate and redirect the path for the '/categories' page
     revalidatePath('/categories');
     redirect('/categories');
-  } catch (error: any) {
+  } 
+  catch (error: any) {
     if(isRedirectError(error)){
-      throw error
+      throw error // Explicitly rethrow the catch block's redirect error
     }
     else if (error instanceof PrismaClientKnownRequestError && error.code === "P2003") {
-      throw new Error("Not_Empty"); // Explicitly rethrow the catch block's error
+      return "Not_Empty";
     } 
     else {
       // Handle other errors (e.g., database connection issues)
-      throw new Error("Unknown_Error");
+      return "Unknown_Error";
     }
   }
 }
