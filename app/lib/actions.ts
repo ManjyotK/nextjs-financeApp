@@ -1,7 +1,9 @@
 "use server";
 
 import prisma from "@/lib/db/prisma";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { revalidatePath } from "next/cache";
+import { isRedirectError } from "next/dist/client/components/redirect";
 import { redirect } from "next/navigation";
 
 /**
@@ -54,12 +56,25 @@ export async function createCategory(formData: FormData) {
  * @returns A Promise that resolves when the category is deleted.
  */
 export async function deleteCategory(id: number) {
-  // Delete the category from the database using Prisma's ORM
-  await prisma.category.delete({ where: { id } });
+  try {
+    // Delete the category from the database using Prisma's ORM
+    const res = await prisma.category.delete({ where: { id } });
 
-  // Revalidate and redirect the path for the '/categories' page
-  revalidatePath('/categories');
-  redirect('/categories');
+    //  Revalidate and redirect the path for the '/categories' page
+    revalidatePath('/categories');
+    redirect('/categories');
+  } catch (error: any) {
+    if(isRedirectError(error)){
+      throw error
+    }
+    else if (error instanceof PrismaClientKnownRequestError && error.code === "P2003") {
+      throw new Error("Not_Empty"); // Explicitly rethrow the catch block's error
+    } 
+    else {
+      // Handle other errors (e.g., database connection issues)
+      throw new Error("Unknown_Error");
+    }
+  }
 }
 
 
