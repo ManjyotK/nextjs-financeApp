@@ -1,7 +1,6 @@
 import { getCategories, getTransactionsJSON } from "@/app/lib/data";
 import TransactionsTable from "../ui/transactionsTable";
 import { TransactionFormat } from "../lib/definitions";
-import AiSummary from "../ui/aiSummary";
 export const dynamic = "force-dynamic";
 
 /**
@@ -19,15 +18,12 @@ export default async function Page() {
 
     // Return the JSX element representing the page
     return (
-        <div>
+        <>
             {/* Display the table of transactions */}
             <TransactionsTable 
                 transactions={formattedTransactions} 
                 categories={categoryList}
             />
-            
-            {/* Display the AI summary component */}
-            <AiSummary />
-        </div>
+        </>
     );
 }

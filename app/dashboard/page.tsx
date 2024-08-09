@@ -2,6 +2,7 @@ import { CategorySum, TransactionFormat } from "@/app/lib/definitions" // Assumi
 import { getTotalSumPerCategory, getTransactionsJSON } from '../lib/data';
 import dynamicComponent from 'next/dynamic' ;
 import DashboardCard from "./_components/card";
+import AiSummary from "../ui/aiSummary";
 const LineChartPage = dynamicComponent(() => import('./_components/LineChart'), { ssr: false });
 const PieChartPage = dynamicComponent(() => import('./_components/PieChart'), { ssr: false });
 export const dynamic = "force-dynamic";
@@ -25,7 +26,7 @@ export default async function Page(){
   const categorySums:CategorySum[] = await getTotalSumPerCategory();
 
   return (
-    <>
+    <div className="max-w-7xl mx-auto">
       {/* Render the dashboard cards */}
       <div className="md:flex md:pb-4 justify-center gap-4">
         {/* Render the Total Spent card */}
@@ -51,6 +52,9 @@ export default async function Page(){
         {/* Render the Pie Chart */}
         <PieChartPage data={categorySums} />
       </div>
-    </>
+
+      {/* Display the AI summary component */}
+      <AiSummary />
+    </div>
   );
 };
